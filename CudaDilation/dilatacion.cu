@@ -88,31 +88,6 @@ __global__ void dilatacion(unsigned char *d_output, unsigned char *d_input, int 
 	d_output[(row + SIZE_STRUCTURING_ELEMENT) * width + col + SIZE_STRUCTURING_ELEMENT] = cur;
 }
 
-__global__ void dlt(float* RES, const float* A, const int SIZEx, const int SIZEy, const int N)
-{
-	const int i = threadIdx.x + blockIdx.x * blockDim.x;
-	if (i < SIZEx * SIZEy)
-	{
-		float cur = A[i];
-		int row = i / SIZEy;
-		int col = i % SIZEy;
-		for (int j = -N; j <= N; j++) {
-			for (int k = -N; k <= N; k++) {
-				int neighborRow = row + j;
-				int neighborCol = col + k;
-				if (neighborRow >= 0 && neighborRow < SIZEx && neighborCol >= 0 && neighborCol < SIZEy) {
-					int idx = neighborRow * SIZEy + neighborCol;
-					if (A[idx] > cur) {
-						cur = A[idx];
-					}
-				}
-			}
-		}
-		RES[i] = cur;
-	}
-}
-
-
 // El main tiene dos argumentos: nombre del fichero de la imagen (tiene que ser BMP) y el tamaño del elemento estructurante
 int main(int argc, char *argv[])
 {
